@@ -1,6 +1,7 @@
 import { useSelector } from '../commons/hooks'
 
 import Robot from './RobotItem'
+import NewRobotItem from './NewRobotItem'
 
 function RobotsList() {
   const robots = useSelector(state => state.inventory.robots)
@@ -10,6 +11,8 @@ function RobotsList() {
       {robots.map(robot => (
         <Robot key={robot.uuid} {...robot} />
       ))}
+
+      <NewRobotItem />
     </div>
   )
 }

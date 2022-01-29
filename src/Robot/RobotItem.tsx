@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDispatch } from '../commons/hooks'
+import { useSelector, useDispatch } from '../commons/hooks'
 import {
   Activity,
   Location,
@@ -61,14 +61,14 @@ function RobotItem({ name, uuid }: RobotItemProps) {
 
   const mineFoo = async () => {
     await keepBusy(1)
-    dispatch(createManufacturedElement({ type: 'foo', createdBy: uuid }))
+    dispatch(createManufacturedElement({ type: 'foos', createdBy: uuid }))
   }
 
   const mineBar = async () => {
     const productionTime = randomBetween(0.5, 2)
     await keepBusy(productionTime)
 
-    dispatch(createManufacturedElement({ type: 'bar', createdBy: uuid }))
+    dispatch(createManufacturedElement({ type: 'bars', createdBy: uuid }))
   }
 
   const createFoobar = async () => {
@@ -76,9 +76,16 @@ function RobotItem({ name, uuid }: RobotItemProps) {
 
     const success = Math.random() <= 0.6
     if (success) {
-      dispatch(createManufacturedElement({ type: 'foobar', createdBy: uuid }))
+      dispatch(createManufacturedElement({ type: 'foobars', createdBy: uuid }))
     }
   }
+
+  const enoughtElementsToCreateFoobar = useSelector(state => {
+    const foos = state.inventory.foos.length
+    const bars = state.inventory.bars.length
+
+    return foos > 0 && bars > 0
+  })
 
   return (
     <div className="robot-item-container">
@@ -94,6 +101,12 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         </ActionButton>
         <ActionButton onClick={() => work('mineBar')} disabled={isWorking}>
           Miner bar
+        </ActionButton>
+        <ActionButton
+          onClick={() => work('createFoobar')}
+          disabled={isWorking || !enoughtElementsToCreateFoobar}
+        >
+          Assembler foobar
         </ActionButton>
       </div>
       <div className="stats"></div>

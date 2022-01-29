@@ -11,9 +11,9 @@ export interface Foobar extends ManufacturedElement {
 }
 
 export interface RobotInventory {
-  foo: number
-  bar: number
-  foobar: number
+  foos: number
+  bars: number
+  foobars: number
 }
 
 export interface Robot {
@@ -24,16 +24,16 @@ export interface Robot {
 }
 
 export interface Inventory {
-  foo: Foo[]
-  bar: Bar[]
-  foobar: Foobar[]
+  foos: Foo[]
+  bars: Bar[]
+  foobars: Foobar[]
   robots: Robot[]
 }
 
 export type Location = 'home' | 'fooFactory' | 'barFactory' | 'foobarFactory'
 export type Activity = 'wait' | 'mineFoo' | 'mineBar' | 'createFoobar'
 export type LocationActivity = Record<Activity, Location>
-export type ManufacturedProduct = 'foo' | 'bar' | 'foobar'
+export type ManufacturedProduct = 'foos' | 'bars' | 'foobars'
 
 export const activityAccordingToLocation: LocationActivity = {
   wait: 'home',

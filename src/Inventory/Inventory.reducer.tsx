@@ -4,15 +4,15 @@ import { Inventory, ManufacturedProduct, RobotInventory } from '@models/index'
 import { relativeTime } from '../commons/helpers'
 
 const initialInventory: RobotInventory = {
-  foo: 0,
-  bar: 0,
-  foobar: 0
+  foos: 0,
+  bars: 0,
+  foobars: 0
 }
 
 const initialState: Inventory = {
-  foo: [],
-  bar: [],
-  foobar: [],
+  foos: [],
+  bars: [],
+  foobars: [],
   robots: [
     {
       uuid: Date.now().toString(),
@@ -44,14 +44,34 @@ const inventorySlice = createSlice({
     ) {
       const { type, createdBy } = action.payload
       const robot = state.robots.find(({ uuid }) => uuid === createdBy)
+      const at = relativeTime()
+
       if (robot) {
         robot.inventory[type] += 1
       }
 
-      state[type].push({ createdAt: relativeTime(), createdBy })
+      state[type].push({
+        createdAt: at,
+        createdBy,
+        ...(type === 'foobars' && {
+          mergedAt: at
+        })
+      })
+    },
+    createRobot(state) {
+      const date = relativeTime()
+      const defaultName = `robot n°${state.robots.length + 1}`
+      const name = prompt('Nom', defaultName)
+
+      state.robots.push({
+        createdAt: date,
+        uuid: date.toString(),
+        inventory: initialInventory,
+        name: name || defaultName
+      })
     }
   }
 })
 
-export const { createManufacturedElement } = inventorySlice.actions
+export const { createManufacturedElement, createRobot } = inventorySlice.actions
 export default inventorySlice.reducer

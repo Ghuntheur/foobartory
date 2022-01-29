@@ -2,7 +2,7 @@ import { useSelector } from '../commons/hooks'
 import { ManufacturedProduct } from '../commons/models'
 
 interface InventoryItemProps {
-  name: ManufacturedProduct
+  name: ManufacturedProduct | 'robots'
 }
 
 function InventoryItem({ name }: InventoryItemProps) {
