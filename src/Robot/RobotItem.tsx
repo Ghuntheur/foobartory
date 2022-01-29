@@ -13,7 +13,6 @@ import {
 } from '../Inventory/Inventory.reducer'
 
 import ActionButton from './ActionButton'
-import ActionProgress from './ActionProgress'
 import RobotInventory from './RobotInventory'
 
 import { Avatar, Card, CardContent, Chip, Typography } from '@mui/material'
@@ -117,9 +116,9 @@ function RobotItem({ name, uuid }: RobotItemProps) {
       case 'walking':
         return 'En déplacement'
       case 'mineBar':
-        return 'Minage de foo'
-      case 'mineFoo':
         return 'Minage de bar'
+      case 'mineFoo':
+        return 'Minage de foo'
       case 'wait':
       default:
         return 'Repos'
@@ -148,7 +147,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         </div>
         <div className="activity">
           <Typography variant="subtitle2">
-            Localisation :{location}
+            Localisation :
             <Chip label={formatLocation()} size="small" />
           </Typography>
 
