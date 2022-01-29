@@ -50,6 +50,10 @@ export type Activity =
   | 'mineBar'
   | 'createFoobar'
   | 'walking'
+
+export type ManufacturedProduct = 'foos' | 'bars' | 'foobars'
+export type WorkStatus = 'success' | 'error' | 'inProgress'
+
 export type LocationActivity = Record<Activity, Location>
 export type ActivityDuration = Record<Activity, number | Function>
-export type ManufacturedProduct = 'foos' | 'bars' | 'foobars'
+export type WorkStatusColors = Record<WorkStatus, string>

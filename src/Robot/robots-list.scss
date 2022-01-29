@@ -1,5 +1,12 @@
 .robots-list-container {
   width: 100%;
+  margin-top: var(--spacing-xl);
+
+  > .new-robot-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-m);
+  }
 
   > .list {
     display: grid;

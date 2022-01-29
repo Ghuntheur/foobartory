@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react'
 import { useSelector, useDispatch } from '../commons/hooks'
-import { Activity, Location, SpendItem } from '../commons/models'
+import { Activity, Location, SpendItem, WorkStatus } from '../commons/models'
 
 import {
   activitiesDurations,
-  activityAccordingToLocation
+  activityAccordingToLocation,
+  workStatusColor
 } from '../commons/constants'
 
 import {
@@ -26,12 +27,12 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   const activity = useRef<Activity>('wait')
 
   const [location, setLocation] = useState<Location>('home')
-  const [isWorking, setWorkingStatus] = useState(false)
+  const [workStatus, setWorkStatus] = useState<WorkStatus | null>(null)
 
   const dispatch = useDispatch()
 
   const work = async (type: Activity) => {
-    setWorkingStatus(true)
+    setWorkStatus('inProgress')
     const newLocation = activityAccordingToLocation[type]
 
     if (location !== newLocation) {
@@ -44,8 +45,6 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     await keepBusy(activity.current)
     await processActivity()
     activity.current = 'wait'
-
-    setWorkingStatus(false)
   }
 
   const processActivity = async () => {
@@ -60,6 +59,8 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         await createFoobar()
         break
     }
+
+    setTimeout(() => setWorkStatus(null), 500)
   }
 
   const keepBusy = async (activity: Activity) => {
@@ -70,10 +71,12 @@ function RobotItem({ name, uuid }: RobotItemProps) {
 
   const mineFoo = async () => {
     dispatch(createManufacturedElement({ type: 'foos', createdBy: uuid }))
+    setWorkStatus('success')
   }
 
   const mineBar = async () => {
     dispatch(createManufacturedElement({ type: 'bars', createdBy: uuid }))
+    setWorkStatus('success')
   }
 
   const createFoobar = async () => {
@@ -81,10 +84,12 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     const elementsToSpend: SpendItem[] = [{ type: 'foos', count: 1 }]
 
     if (success) {
+      setWorkStatus('success')
       dispatch(createManufacturedElement({ type: 'foobars', createdBy: uuid }))
       elementsToSpend.push({ type: 'bars', count: 1 })
     }
 
+    setWorkStatus('error')
     dispatch(spendManufacturedElements(elementsToSpend))
   }
 
@@ -132,8 +137,14 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   // const progressDuration =
   //   typeof tempDuration === 'function' ? tempDuration() : tempDuration
 
+  const isWorking = workStatus === 'inProgress'
+
   return (
-    <Card variant="outlined" className="robot-item-container">
+    <Card
+      variant="outlined"
+      className="robot-item-container"
+      sx={workStatus && { borderColor: workStatusColor[workStatus] }}
+    >
       <CardContent>
         <div className="identity">
           <Typography variant="h5">{name}</Typography>

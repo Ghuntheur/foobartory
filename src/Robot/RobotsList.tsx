@@ -10,13 +10,15 @@ function RobotsList() {
 
   return (
     <div className="robots-list-container">
+      <div className="new-robot-container">
+        <NewRobotItem />
+      </div>
+
       <div className="list">
         {robots.map(robot => (
           <Robot key={robot.uuid} {...robot} />
         ))}
       </div>
-
-      <NewRobotItem />
     </div>
   )
 }
