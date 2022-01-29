@@ -1,12 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Inventory, ManufacturedProduct } from '@models/index'
+import { Inventory, ManufacturedProduct, RobotInventory } from '@models/index'
 import { relativeTime } from '../commons/helpers'
+
+const initialInventory: RobotInventory = {
+  foo: 0,
+  bar: 0,
+  foobar: 0
+}
 
 const initialState: Inventory = {
   foo: [],
   bar: [],
-  foobar: []
+  foobar: [],
+  robots: [
+    {
+      uuid: Date.now().toString(),
+      name: 'Bob',
+      createdAt: 0,
+      inventory: initialInventory
+    },
+    {
+      uuid: (Date.now() + 1).toString(),
+      name: 'Pat',
+      createdAt: 0,
+      inventory: initialInventory
+    }
+  ]
 }
 
 interface createManufacturedElementPayload {
@@ -23,6 +43,11 @@ const inventorySlice = createSlice({
       action: PayloadAction<createManufacturedElementPayload>
     ) {
       const { type, createdBy } = action.payload
+      const robot = state.robots.find(({ uuid }) => uuid === createdBy)
+      if (robot) {
+        robot.inventory[type] += 1
+      }
+
       state[type].push({ createdAt: relativeTime(), createdBy })
     }
   }

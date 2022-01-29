@@ -3,7 +3,7 @@ import { useSelector } from '../commons/hooks'
 import Robot from './RobotItem'
 
 function RobotsList() {
-  const robots = useSelector(state => state.robots)
+  const robots = useSelector(state => state.inventory.robots)
 
   return (
     <div className="robots-list-container">
