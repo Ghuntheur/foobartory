@@ -1,17 +1,9 @@
-import RobotsList from '../Robot/RobotsList'
-import Interface from '../Interface/Interface'
+import Dashboard from 'src/Dashboard/Dashboard'
+
+import './../styles/index.scss'
 
 function App() {
-  return (
-    <div>
-      <aside className="sidebar-container">A gauche</aside>
-      <main className="main-container">
-        <Interface />
-
-        <RobotsList />
-      </main>
-    </div>
-  )
+  return <Dashboard />
 }
 
 export default App

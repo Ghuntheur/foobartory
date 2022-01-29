@@ -1,30 +1,41 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { Inventory, ManufacturedProduct, RobotInventory } from '@models/index'
+import {
+  Garbage,
+  Inventory,
+  ManufacturedProduct,
+  RobotInventory,
+  SpendItem
+} from '@models/index'
 import { relativeTime } from '../commons/helpers'
 
-const initialInventory: RobotInventory = {
+const initialRobotInventory: RobotInventory = {
   foos: 0,
   bars: 0,
   foobars: 0
 }
 
-const initialState: Inventory = {
+const initialInventory: Garbage = {
   foos: [],
   bars: [],
-  foobars: [],
+  foobars: []
+}
+
+const initialState: Inventory = {
+  ...initialInventory,
+  garbage: initialInventory,
   robots: [
     {
       uuid: Date.now().toString(),
       name: 'Bob',
       createdAt: 0,
-      inventory: initialInventory
+      inventory: initialRobotInventory
     },
     {
       uuid: (Date.now() + 1).toString(),
       name: 'Pat',
       createdAt: 0,
-      inventory: initialInventory
+      inventory: initialRobotInventory
     }
   ]
 }
@@ -58,20 +69,44 @@ const inventorySlice = createSlice({
         })
       })
     },
+    spendManufacturedElements(state, action: PayloadAction<SpendItem[]>) {
+      const { payload: elements } = action
+
+      const at = relativeTime()
+
+      elements.forEach(element => {
+        const items = state[element.type].splice(0, element.count)
+        state.garbage[element.type].push(
+          ...items.map(item => ({
+            ...item,
+            usedAt: at
+          }))
+        )
+      })
+    },
     createRobot(state) {
       const date = relativeTime()
       const defaultName = `robot n°${state.robots.length + 1}`
       const name = prompt('Nom', defaultName)
 
+      spendManufacturedElements([
+        { type: 'foobars', count: 3 },
+        { type: 'foos', count: 6 }
+      ])
+
       state.robots.push({
         createdAt: date,
         uuid: date.toString(),
-        inventory: initialInventory,
+        inventory: initialRobotInventory,
         name: name || defaultName
       })
     }
   }
 })
 
-export const { createManufacturedElement, createRobot } = inventorySlice.actions
+export const {
+  createManufacturedElement,
+  spendManufacturedElements,
+  createRobot
+} = inventorySlice.actions
 export default inventorySlice.reducer

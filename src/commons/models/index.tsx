@@ -1,6 +1,7 @@
 export interface ManufacturedElement {
   createdAt: number
   createdBy: string
+  usedAt?: number
 }
 
 export interface Foo extends ManufacturedElement {}
@@ -23,15 +24,32 @@ export interface Robot {
   inventory: RobotInventory
 }
 
+export interface Garbage {
+  foos: Foo[]
+  bars: Bar[]
+  foobars: Foobar[]
+}
+
 export interface Inventory {
   foos: Foo[]
   bars: Bar[]
   foobars: Foobar[]
+  garbage: Garbage
   robots: Robot[]
 }
 
+export interface SpendItem {
+  type: ManufacturedProduct
+  count: number
+}
+
 export type Location = 'home' | 'fooFactory' | 'barFactory' | 'foobarFactory'
-export type Activity = 'wait' | 'mineFoo' | 'mineBar' | 'createFoobar'
+export type Activity =
+  | 'wait'
+  | 'mineFoo'
+  | 'mineBar'
+  | 'createFoobar'
+  | 'walking'
 export type LocationActivity = Record<Activity, Location>
 export type ManufacturedProduct = 'foos' | 'bars' | 'foobars'
 
@@ -39,5 +57,6 @@ export const activityAccordingToLocation: LocationActivity = {
   wait: 'home',
   mineFoo: 'fooFactory',
   mineBar: 'barFactory',
-  createFoobar: 'foobarFactory'
+  createFoobar: 'foobarFactory',
+  walking: 'home'
 }

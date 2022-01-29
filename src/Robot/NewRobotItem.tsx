@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import { useDispatch, useSelector } from '../commons/hooks'
 
 import { createRobot } from '../Inventory/Inventory.reducer'
@@ -15,9 +16,14 @@ function NewRobotItem() {
   }
 
   return (
-    <button onClick={handleClick} disabled={!canCreateRobot}>
+    <Button
+      variant="contained"
+      size="large"
+      onClick={handleClick}
+      disabled={!canCreateRobot}
+    >
       Acheter un robot
-    </button>
+    </Button>
   )
 }
 

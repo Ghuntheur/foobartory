@@ -1,3 +1,4 @@
+import { Button } from '@mui/material'
 import { ReactNode } from 'react'
 
 interface ActionButtonProps {
@@ -8,9 +9,14 @@ interface ActionButtonProps {
 
 function ActionButton({ onClick, children, disabled }: ActionButtonProps) {
   return (
-    <button onClick={onClick} disabled={disabled}>
+    <Button
+      variant="outlined"
+      onClick={onClick}
+      size="small"
+      disabled={disabled}
+    >
       {children}
-    </button>
+    </Button>
   )
 }
 

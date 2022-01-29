@@ -1,6 +1,9 @@
 import { useSelector } from '../commons/hooks'
 import { ManufacturedProduct } from '../commons/models'
 
+import Chip from '@mui/material/Chip'
+import Typography from '@mui/material/Typography'
+
 interface InventoryItemProps {
   name: ManufacturedProduct | 'robots'
 }
@@ -10,8 +13,8 @@ function InventoryItem({ name }: InventoryItemProps) {
 
   return (
     <div className="inventory-item-container">
-      <h5>{name}</h5>
-      <span>{count}</span>
+      <Typography variant="subtitle1">{name}</Typography>
+      <Chip label={count} />
     </div>
   )
 }

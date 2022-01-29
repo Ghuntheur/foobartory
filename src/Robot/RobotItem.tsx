@@ -3,13 +3,22 @@ import { useSelector, useDispatch } from '../commons/hooks'
 import {
   Activity,
   Location,
-  activityAccordingToLocation
+  activityAccordingToLocation,
+  SpendItem
 } from '../commons/models'
 
-import { createManufacturedElement } from '../Inventory/Inventory.reducer'
+import {
+  createManufacturedElement,
+  spendManufacturedElements
+} from '../Inventory/Inventory.reducer'
+
+import { randomBetween } from 'src/commons/helpers'
 
 import ActionButton from './ActionButton'
-import { randomBetween } from 'src/commons/helpers'
+import RobotInventory from './RobotInventory'
+
+import Avatar from '@mui/material/Avatar'
+import { Card, CardContent, Chip, Typography } from '@mui/material'
 
 interface RobotItemProps {
   uuid: string
@@ -28,6 +37,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     const newLocation = activityAccordingToLocation[type]
 
     if (location !== newLocation) {
+      setActivity('walking')
       await keepBusy(5)
       setLocation(newLocation)
     }
@@ -75,9 +85,14 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     keepBusy(2)
 
     const success = Math.random() <= 0.6
+    const elementsToSpend: SpendItem[] = [{ type: 'foos', count: 1 }]
+
     if (success) {
       dispatch(createManufacturedElement({ type: 'foobars', createdBy: uuid }))
+      elementsToSpend.push({ type: 'bars', count: 1 })
     }
+
+    dispatch(spendManufacturedElements(elementsToSpend))
   }
 
   const enoughtElementsToCreateFoobar = useSelector(state => {
@@ -87,30 +102,76 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     return foos > 0 && bars > 0
   })
 
+  const formatLocation = (): string => {
+    switch (location) {
+      case 'barFactory':
+        return 'Usine de bars'
+      case 'fooFactory':
+        return 'Usine de foos'
+      case 'foobarFactory':
+        return "Usine d'assemblage"
+      case 'home':
+        return activity === 'walking' ? '...' : 'Maison'
+      default:
+        return 'Maison'
+    }
+  }
+
+  const formatActivity = (): string => {
+    switch (activity) {
+      case 'walking':
+        return 'En déplacement'
+      case 'mineBar':
+        return 'Minage de foo'
+      case 'mineFoo':
+        return 'Minage de bar'
+      case 'wait':
+      default:
+        return 'Repos'
+    }
+  }
+
   return (
-    <div className="robot-item-container">
-      <div className="identity">
-        <label htmlFor="name">Nom</label>
-        <input name="name" value={name} placeholder="Bob"></input>
-      </div>
-      <div className="inventory"></div>
-      <div className="activity">{activity}</div>
-      <div className="actions">
-        <ActionButton onClick={() => work('mineFoo')} disabled={isWorking}>
-          Miner foo
-        </ActionButton>
-        <ActionButton onClick={() => work('mineBar')} disabled={isWorking}>
-          Miner bar
-        </ActionButton>
-        <ActionButton
-          onClick={() => work('createFoobar')}
-          disabled={isWorking || !enoughtElementsToCreateFoobar}
-        >
-          Assembler foobar
-        </ActionButton>
-      </div>
-      <div className="stats"></div>
-    </div>
+    <Card variant="outlined" className="robot-item-container">
+      <CardContent>
+        <div className="identity">
+          <Typography variant="h5">{name}</Typography>
+          <Avatar
+            src={`https://robohash.org/${name}`}
+            sx={{ width: '48px', height: '48px' }}
+          />
+        </div>
+        <div className="inventory">
+          <RobotInventory uuid={uuid} />
+        </div>
+        <div className="activity">
+          <Typography variant="subtitle2">
+            Localisation :
+            <Chip label={formatLocation()} size="small" />
+          </Typography>
+
+          <Typography variant="subtitle2">
+            Activité :
+            <Chip label={formatActivity()} size="small" />
+          </Typography>
+        </div>
+        <div className="actions">
+          <ActionButton onClick={() => work('mineFoo')} disabled={isWorking}>
+            Miner foo
+          </ActionButton>
+          <ActionButton onClick={() => work('mineBar')} disabled={isWorking}>
+            Miner bar
+          </ActionButton>
+          <ActionButton
+            onClick={() => work('createFoobar')}
+            disabled={isWorking || !enoughtElementsToCreateFoobar}
+          >
+            Assembler foobar
+          </ActionButton>
+        </div>
+        <div className="stats"></div>
+      </CardContent>
+    </Card>
   )
 }
 

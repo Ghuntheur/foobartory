@@ -1,0 +1,9 @@
+.robots-list-container {
+  width: 100%;
+
+  > .list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(460px, 100%), 1fr));
+    gap: var(--spacing-m);
+  }
+}

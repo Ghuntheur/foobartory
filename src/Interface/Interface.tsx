@@ -1,6 +1,8 @@
 import InventoryItem from '../Inventory/InventoryItem'
 import Chrono from './Chrono'
 
+import './interface.scss'
+
 function Interface() {
   return (
     <div className="interface-container">
