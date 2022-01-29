@@ -66,7 +66,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   }
 
   const keepBusy = async (amount: number) => {
-    return new Promise(resolve => setTimeout(resolve, amount * 1000))
+    return new Promise(resolve => setTimeout(resolve, amount * 10))
   }
 
   const mineFoo = async () => {

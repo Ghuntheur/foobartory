@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import {
   Garbage,
@@ -89,11 +89,6 @@ const inventorySlice = createSlice({
       const defaultName = `robot n°${state.robots.length + 1}`
       const name = prompt('Nom', defaultName)
 
-      spendManufacturedElements([
-        { type: 'foobars', count: 3 },
-        { type: 'foos', count: 6 }
-      ])
-
       state.robots.push({
         createdAt: date,
         uuid: date.toString(),
@@ -101,6 +96,11 @@ const inventorySlice = createSlice({
         name: name || defaultName
       })
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(spendManufacturedElements, (state, action) => {
+      console.log(state, action)
+    })
   }
 })
 
