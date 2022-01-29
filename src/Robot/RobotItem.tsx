@@ -1,24 +1,22 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useSelector, useDispatch } from '../commons/hooks'
+import { Activity, Location, SpendItem } from '../commons/models'
+
 import {
-  Activity,
-  Location,
-  activityAccordingToLocation,
-  SpendItem
-} from '../commons/models'
+  activitiesDurations,
+  activityAccordingToLocation
+} from '../commons/constants'
 
 import {
   createManufacturedElement,
   spendManufacturedElements
 } from '../Inventory/Inventory.reducer'
 
-import { randomBetween } from 'src/commons/helpers'
-
 import ActionButton from './ActionButton'
+import ActionProgress from './ActionProgress'
 import RobotInventory from './RobotInventory'
 
-import Avatar from '@mui/material/Avatar'
-import { Card, CardContent, Chip, Typography } from '@mui/material'
+import { Avatar, Card, CardContent, Chip, Typography } from '@mui/material'
 
 interface RobotItemProps {
   uuid: string
@@ -26,7 +24,8 @@ interface RobotItemProps {
 }
 
 function RobotItem({ name, uuid }: RobotItemProps) {
-  const [activity, setActivity] = useState<Activity>('wait')
+  const activity = useRef<Activity>('wait')
+
   const [location, setLocation] = useState<Location>('home')
   const [isWorking, setWorkingStatus] = useState(false)
 
@@ -37,20 +36,21 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     const newLocation = activityAccordingToLocation[type]
 
     if (location !== newLocation) {
-      setActivity('walking')
-      await keepBusy(5)
+      activity.current = 'walking'
+      await keepBusy('walking')
       setLocation(newLocation)
     }
 
-    await processActivity(type)
+    activity.current = type
+    await keepBusy(activity.current)
+    await processActivity()
+    activity.current = 'wait'
 
     setWorkingStatus(false)
   }
 
-  const processActivity = async (type: Activity) => {
-    setActivity(type)
-
-    switch (type) {
+  const processActivity = async () => {
+    switch (activity.current) {
       case 'mineFoo':
         await mineFoo()
         break
@@ -61,29 +61,23 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         await createFoobar()
         break
     }
-
-    setActivity('wait')
   }
 
-  const keepBusy = async (amount: number) => {
-    return new Promise(resolve => setTimeout(resolve, amount * 10))
+  const keepBusy = async (activity: Activity) => {
+    const duration = activitiesDurations[activity]
+    const amount = typeof duration === 'function' ? duration() : duration
+    return new Promise(resolve => setTimeout(resolve, amount * 1000))
   }
 
   const mineFoo = async () => {
-    await keepBusy(1)
     dispatch(createManufacturedElement({ type: 'foos', createdBy: uuid }))
   }
 
   const mineBar = async () => {
-    const productionTime = randomBetween(0.5, 2)
-    await keepBusy(productionTime)
-
     dispatch(createManufacturedElement({ type: 'bars', createdBy: uuid }))
   }
 
   const createFoobar = async () => {
-    keepBusy(2)
-
     const success = Math.random() <= 0.6
     const elementsToSpend: SpendItem[] = [{ type: 'foos', count: 1 }]
 
@@ -103,6 +97,8 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   })
 
   const formatLocation = (): string => {
+    if (activity.current === 'walking') return '...'
+
     switch (location) {
       case 'barFactory':
         return 'Usine de bars'
@@ -111,14 +107,13 @@ function RobotItem({ name, uuid }: RobotItemProps) {
       case 'foobarFactory':
         return "Usine d'assemblage"
       case 'home':
-        return activity === 'walking' ? '...' : 'Maison'
       default:
         return 'Maison'
     }
   }
 
   const formatActivity = (): string => {
-    switch (activity) {
+    switch (activity.current) {
       case 'walking':
         return 'En déplacement'
       case 'mineBar':
@@ -130,6 +125,13 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         return 'Repos'
     }
   }
+
+  // const showProgress = activity.current !== 'wait'
+  // console.log(showProgress, activity.current)
+
+  // const tempDuration = activitiesDurations[activity.current]
+  // const progressDuration =
+  //   typeof tempDuration === 'function' ? tempDuration() : tempDuration
 
   return (
     <Card variant="outlined" className="robot-item-container">
@@ -146,7 +148,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         </div>
         <div className="activity">
           <Typography variant="subtitle2">
-            Localisation :
+            Localisation :{location}
             <Chip label={formatLocation()} size="small" />
           </Typography>
 
@@ -168,6 +170,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
           >
             Assembler foobar
           </ActionButton>
+          {/* {showProgress && <ActionProgress duration={progressDuration} />} */}
         </div>
         <div className="stats"></div>
       </CardContent>

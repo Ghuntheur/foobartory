@@ -51,12 +51,5 @@ export type Activity =
   | 'createFoobar'
   | 'walking'
 export type LocationActivity = Record<Activity, Location>
+export type ActivityDuration = Record<Activity, number | Function>
 export type ManufacturedProduct = 'foos' | 'bars' | 'foobars'
-
-export const activityAccordingToLocation: LocationActivity = {
-  wait: 'home',
-  mineFoo: 'fooFactory',
-  mineBar: 'barFactory',
-  createFoobar: 'foobarFactory',
-  walking: 'home'
-}
