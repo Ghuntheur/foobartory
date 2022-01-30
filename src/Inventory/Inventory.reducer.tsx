@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 import {
-  Garbage,
-  Inventory,
+  IGarbage,
+  IInventory,
   ManufacturedProduct,
-  RobotInventory,
-  SpendItem
-} from '@models/index'
+  IRobotInventory,
+  ISpendItem
+} from '../commons/models'
 import { relativeTime } from '../commons/helpers'
 
-const initialRobotInventory: RobotInventory = {
+const initialRobotInventory: IRobotInventory = {
   foos: 0,
   bars: 0,
   foobars: 0,
@@ -17,13 +17,13 @@ const initialRobotInventory: RobotInventory = {
   foobarsAttemptsFailed: 0
 }
 
-const initialInventory: Garbage = {
+const initialInventory: IGarbage = {
   foos: [],
   bars: [],
   foobars: []
 }
 
-const initialState: Inventory = {
+const initialState: IInventory = {
   ...initialInventory,
   foobarsAttempts: 0,
   foobarsAttemptsFailed: 0,
@@ -84,7 +84,7 @@ const inventorySlice = createSlice({
         })
       })
     },
-    spendManufacturedElements(state, action: PayloadAction<SpendItem[]>) {
+    spendManufacturedElements(state, action: PayloadAction<ISpendItem[]>) {
       const { payload: elements } = action
 
       const at = relativeTime()

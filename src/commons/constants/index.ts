@@ -26,13 +26,13 @@ export const workStatusColor: WorkStatusColors = {
 
 export const chartColors = [
   '#ef9a9a',
-  '#f48fb1',
-  '#ce93d8',
+  '#d7ccc8',
   '#bbdefb',
   '#b2dfdb',
-  '#dcedc8',
-  '#f0f4c3',
-  '#d7ccc8',
   '#ffccbc',
-  '#fff9c4'
+  '#fff9c4',
+  '#dcedc8',
+  '#ce93d8',
+  '#f0f4c3',
+  '#f48fb1'
 ]

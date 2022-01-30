@@ -1,4 +1,4 @@
-import Dashboard from 'src/Dashboard/Dashboard'
+import Dashboard from '../Dashboard/Dashboard'
 
 import './../styles/index.scss'
 

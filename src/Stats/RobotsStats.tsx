@@ -10,9 +10,10 @@ import {
 import { Radar } from 'react-chartjs-2'
 
 import { useSelector } from '../commons/hooks'
-import { Robot } from '../commons/models'
 import { chartColors } from '../commons/constants'
 import { hexToRgb } from '../commons/helpers'
+
+import { IRobot } from '../commons/models'
 
 ChartJS.register(
   RadialLinearScale,
@@ -24,7 +25,7 @@ ChartJS.register(
 )
 
 function RobotStats() {
-  const robots: Robot[] = useSelector(state => state.inventory.robots)
+  const robots: IRobot[] = useSelector(state => state.inventory.robots)
 
   const chartData = {
     labels: ['foos', 'bars', 'foobars'],

@@ -1,10 +1,11 @@
 import { useSelector } from '../commons/hooks'
+import { IRobot } from '../commons/models'
 
-import Robot from './RobotItem'
+import RobotItem from './RobotItem'
+import End from '../Interface/End'
+import NewRobotItem from '../Robot/NewRobotItem'
 
 import './robots-list.scss'
-import { Typography } from '@mui/material'
-import { NavLink } from 'react-router-dom'
 
 function RobotsList() {
   const robots = useSelector(state => state.inventory.robots)
@@ -12,17 +13,16 @@ function RobotsList() {
   const isEnd = robots.length === 4
 
   return isEnd ? (
-    <div>
-      <Typography>Bravo ! Vous avez fini !</Typography>
-      <NavLink to="/stats">Voir les stats</NavLink>
-    </div>
+    <End />
   ) : (
     <div className="robots-list-container">
-      <div className="new-robot-container"></div>
+      <div className="new-robot-container">
+        <NewRobotItem />
+      </div>
 
       <div className="list">
-        {robots.map(robot => (
-          <Robot key={robot.uuid} {...robot} />
+        {robots.map((robot: IRobot) => (
+          <RobotItem key={robot.uuid} {...robot} />
         ))}
       </div>
     </div>

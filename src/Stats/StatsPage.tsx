@@ -1,11 +1,12 @@
-import ProductStats from './ProductStats'
 import RobotStats from './RobotsStats'
+import StatContainer from './StatContainer'
 
 function StatsPage() {
   return (
     <>
-      <RobotStats />
-      {/* <ProductStats type="foos" /> */}
+      <StatContainer>
+        <RobotStats />
+      </StatContainer>
     </>
   )
 }

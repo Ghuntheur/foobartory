@@ -1,20 +1,21 @@
 .dashboard-container {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  height: 100%;
 
-  > .sidebar-container {
-    grid-column: 1 / span 2;
-    z-index: 2;
+  > .sidebar {
+    position: fixed;
+    width: calc(100% - var(--main-width));
+    height: 100vh;
+    min-width: 200px;
   }
 
-  > .main-container {
-    position: relative;
-    grid-column: 3 / span 10;
+  > .main {
+    width: var(--main-width);
+    margin-left: calc(100% - var(--main-width));
     padding: var(--spacing-xxl);
-    width: 100%;
+    height: 100%;
 
-    > .router-container {
-      margin-top: 200px;
+    > .router {
+      margin-top: 180px;
     }
   }
 }

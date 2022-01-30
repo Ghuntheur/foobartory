@@ -1,6 +1,5 @@
 import Interface from '../Interface/Interface'
 import Chrono from '../Interface/Chrono'
-import NewRobotItem from '../Robot/NewRobotItem'
 
 import './header.scss'
 
@@ -9,7 +8,6 @@ function Header() {
     <div className="header-container">
       <Chrono />
       <Interface />
-      <NewRobotItem />
     </div>
   )
 }

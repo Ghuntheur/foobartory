@@ -1,5 +1,6 @@
 import { Typography, Chip } from '@mui/material'
 import { useSelector } from '../commons/hooks'
+import { IRobot } from '../commons/models'
 
 interface RobotInventoryProps {
   uuid: string
@@ -13,7 +14,7 @@ interface ItemProps {
 function RobotInventory({ uuid }: RobotInventoryProps) {
   const inventory =
     useSelector(state =>
-      state.inventory.robots.find(robot => robot.uuid === uuid)
+      state.inventory.robots.find((robot: IRobot) => robot.uuid === uuid)
     )?.inventory || {}
 
   const Item = ({ name, count }: ItemProps) => (

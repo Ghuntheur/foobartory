@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useSelector, useDispatch } from '../commons/hooks'
-import { Activity, Location, SpendItem, WorkStatus } from '../commons/models'
+import { Activity, Location, ISpendItem, WorkStatus } from '../commons/models'
 
 import {
   activitiesDurations,
@@ -15,10 +15,12 @@ import {
 } from '../Inventory/Inventory.reducer'
 
 import ActionButton from './ActionButton'
+import ActionProgress from './ActionProgress'
 import RobotInventory from './RobotInventory'
 
 import {
   Avatar,
+  ButtonGroup,
   Card,
   CardContent,
   Chip,
@@ -29,6 +31,8 @@ import {
   // SelectChangeEvent,
   Typography
 } from '@mui/material'
+
+import './robot-item.scss'
 
 interface RobotItemProps {
   uuid: string
@@ -71,14 +75,12 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         await createFoobar()
         break
     }
-
-    // setTimeout(() => setWorkStatus(null), 500)
   }
 
   const keepBusy = async (activity: Activity) => {
     const duration = activitiesDurations[activity]
     const amount = typeof duration === 'function' ? duration() : duration
-    return new Promise(resolve => setTimeout(resolve, amount * 10))
+    return new Promise(resolve => setTimeout(resolve, amount * 1000))
   }
 
   const mineFoo = async () => {
@@ -93,7 +95,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
 
   const createFoobar = async () => {
     const success = Math.random() <= 0.6
-    const elementsToSpend: SpendItem[] = [{ type: 'foos', count: 1 }]
+    const elementsToSpend: ISpendItem[] = [{ type: 'foos', count: 1 }]
 
     if (success) {
       setWorkStatus('success')
@@ -163,12 +165,13 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   //   }
   // }
 
-  // const showProgress = activity.current !== 'wait'
-  // console.log(showProgress, activity.current)
+  const showProgress = activity.current === 'walking' && !!workStatus
 
-  // const tempDuration = activitiesDurations[activity.current]
-  // const progressDuration =
-  //   typeof tempDuration === 'function' ? tempDuration() : tempDuration
+  console.log(showProgress, activity.current, workStatus)
+
+  const tempDuration = activitiesDurations[activity.current]
+  const progressDuration =
+    typeof tempDuration === 'function' ? tempDuration() : tempDuration
 
   const isWorking = workStatus === 'inProgress'
 
@@ -178,22 +181,22 @@ function RobotItem({ name, uuid }: RobotItemProps) {
       className="robot-item-container"
       sx={workStatus && { borderColor: workStatusColor[workStatus] }}
     >
-      <CardContent>
+      <CardContent className="robot-item">
         <div className="identity">
-          <Typography variant="h5">{name}</Typography>
+          <Typography variant="h4">{name}</Typography>
           <Avatar
             src={`https://robohash.org/${name}`}
-            sx={{ width: '48px', height: '48px' }}
+            sx={{ width: '64px', height: '64px' }}
           />
         </div>
-        <div className="inventory">
-          <RobotInventory uuid={uuid} />
-        </div>
+        <div className="inventory">{/* <RobotInventory uuid={uuid} /> */}</div>
         <div className="activity">
           <Typography variant="subtitle2">
             Localisation :
             <Chip label={formatLocation()} size="small" />
           </Typography>
+
+          {showProgress && <ActionProgress duration={progressDuration} />}
 
           <Typography variant="subtitle2">
             Activité :
@@ -201,18 +204,20 @@ function RobotItem({ name, uuid }: RobotItemProps) {
           </Typography>
         </div>
         <div className="actions">
-          <ActionButton onClick={() => work('mineFoo')} disabled={isWorking}>
-            Miner foo
-          </ActionButton>
-          <ActionButton onClick={() => work('mineBar')} disabled={isWorking}>
-            Miner bar
-          </ActionButton>
-          <ActionButton
-            onClick={() => work('createFoobar')}
-            disabled={isWorking || !enoughtElementsToCreateFoobar}
-          >
-            Assembler foobar
-          </ActionButton>
+          <ButtonGroup orientation="vertical">
+            <ActionButton onClick={() => work('mineFoo')} disabled={isWorking}>
+              Miner foo
+            </ActionButton>
+            <ActionButton onClick={() => work('mineBar')} disabled={isWorking}>
+              Miner bar
+            </ActionButton>
+            <ActionButton
+              onClick={() => work('createFoobar')}
+              disabled={isWorking || !enoughtElementsToCreateFoobar}
+            >
+              Assembler foobar
+            </ActionButton>
+          </ButtonGroup>
 
           {/* <FormControl className="auto-action" fullWidth>
             <InputLabel id="auto-action">Action automatique</InputLabel>
@@ -227,7 +232,6 @@ function RobotItem({ name, uuid }: RobotItemProps) {
               <MenuItem value="createFoobar">Assembler des foobar</MenuItem>
             </Select>
           </FormControl> */}
-          {/* {showProgress && <ActionProgress duration={progressDuration} />} */}
         </div>
         <div className="stats"></div>
       </CardContent>

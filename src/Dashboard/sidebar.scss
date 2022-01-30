@@ -1,0 +1,20 @@
+.sidebar-container {
+  background: var(--color-dark);
+  height: 100%;
+  padding: var(--spacing-l) var(--spacing-m);
+
+  .title {
+    color: var(--color-light);
+    text-align: center;
+    margin-bottom: var(--spacing-xxl);
+  }
+
+  li {
+    color: var(--color-light);
+    margin: var(--spacing-m) 0;
+
+    .active {
+      text-decoration: underline;
+    }
+  }
+}

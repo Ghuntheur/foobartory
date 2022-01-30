@@ -1,8 +1,9 @@
 .interface-container {
   display: flex;
   align-items: center;
+  margin: var(--spacing-l) 0;
 
   > div {
-    margin: var(--spacing-m);
+    margin: 0 var(--spacing-m);
   }
 }

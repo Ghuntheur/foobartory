@@ -1,17 +1,17 @@
-export interface ManufacturedElement {
+export interface IManufacturedElement {
   createdAt: number
   createdBy: string
   usedAt?: number
 }
 
-export interface Foo extends ManufacturedElement {}
-export interface Bar extends ManufacturedElement {}
+export interface IFoo extends IManufacturedElement {}
+export interface IBar extends IManufacturedElement {}
 
-export interface Foobar extends ManufacturedElement {
+export interface IFoobar extends IManufacturedElement {
   mergedAt?: number
 }
 
-export interface RobotInventory {
+export interface IRobotInventory {
   foos: number
   bars: number
   foobars: number
@@ -19,30 +19,30 @@ export interface RobotInventory {
   foobarsAttemptsFailed: number
 }
 
-export interface Robot {
+export interface IRobot {
   uuid: string
   name: string
   createdAt: number
-  inventory: RobotInventory
+  inventory: IRobotInventory
 }
 
-export interface Garbage {
-  foos: Foo[]
-  bars: Bar[]
-  foobars: Foobar[]
+export interface IGarbage {
+  foos: IFoo[]
+  bars: IBar[]
+  foobars: IFoobar[]
 }
 
-export interface Inventory {
-  foos: Foo[]
-  bars: Bar[]
-  foobars: Foobar[]
-  garbage: Garbage
-  robots: Robot[]
+export interface IInventory {
+  foos: IFoo[]
+  bars: IBar[]
+  foobars: IFoobar[]
+  garbage: IGarbage
+  robots: IRobot[]
   foobarsAttempts: number
   foobarsAttemptsFailed: number
 }
 
-export interface SpendItem {
+export interface ISpendItem {
   type: ManufacturedProduct
   count: number
 }

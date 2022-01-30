@@ -1,0 +1,13 @@
+.robot-item-container {
+  .robot-item {
+    display: flex;
+    align-items: center;
+
+    > .identity {
+      margin-right: var(--spacing-m);
+    }
+
+    > .activity {
+    }
+  }
+}

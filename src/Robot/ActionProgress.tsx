@@ -15,7 +15,7 @@ function ActionProgress({ duration }: ActionProgressProps) {
     const chrono = setInterval(() => {
       setProgress(prevProgress => {
         if (prevProgress >= 100) {
-          return 100
+          return 0
         }
 
         return prevProgress + 100 / steps

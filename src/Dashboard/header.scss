@@ -1,9 +1,12 @@
 .header-container {
+  top: 0;
+  padding-top: var(--spacing-xxl);
+  padding-bottom: var(--spacing-m);
   position: fixed;
-  background: red;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
+  left: calc(100% - var(--main-width));
   align-items: center;
+  width: var(--main-width);
+  background: var(--color-background);
 }
