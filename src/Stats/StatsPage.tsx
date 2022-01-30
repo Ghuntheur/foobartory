@@ -1,5 +1,13 @@
+import ProductStats from './ProductStats'
+import RobotStats from './RobotsStats'
+
 function StatsPage() {
-  return <div>stats</div>
+  return (
+    <>
+      <RobotStats />
+      {/* <ProductStats type="foos" /> */}
+    </>
+  )
 }
 
 export default StatsPage

@@ -1,19 +1,11 @@
 import { Route, Routes } from 'react-router-dom'
 
-import RobotsList from '../Robot/RobotsList'
-import Interface from '../Interface/Interface'
 import StatsPage from '../Stats/StatsPage'
-
+import Header from './Header'
 import Sidebar from './Sidebar'
+import RobotsList from 'src/Robot/RobotsList'
 
 import './dashboard.scss'
-
-const RobotManagement = () => (
-  <>
-    <Interface />
-    <RobotsList />
-  </>
-)
 
 function Dashboard() {
   return (
@@ -22,10 +14,14 @@ function Dashboard() {
         <Sidebar />
       </aside>
       <main className="main-container">
-        <Routes>
-          <Route path="/" element={<RobotManagement />} />
-          <Route path="/stats" element={<StatsPage />} />
-        </Routes>
+        <Header />
+
+        <div className="router-container">
+          <Routes>
+            <Route path="/" element={<RobotsList />} />
+            <Route path="/stats" element={<StatsPage />} />
+          </Routes>
+        </div>
       </main>
     </div>
   )

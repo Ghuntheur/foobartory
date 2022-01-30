@@ -120,6 +120,7 @@ const inventorySlice = createSlice({
         robot.inventory.foobarsAttemptsFailed += 1
       }
 
+      state.foobarsAttempts += 1
       state.foobarsAttemptsFailed += 1
     }
   }
