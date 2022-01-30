@@ -13,7 +13,7 @@ function RobotInventory({ uuid }: RobotInventoryProps) {
   return (
     <>
       {Object.entries(inventory).map(([element, count]: [string, any]) => (
-        <div>
+        <div key={element}>
           <h5>{element}</h5>
           <span>{count}</span>
         </div>

@@ -12,7 +12,9 @@ import { relativeTime } from '../commons/helpers'
 const initialRobotInventory: RobotInventory = {
   foos: 0,
   bars: 0,
-  foobars: 0
+  foobars: 0,
+  foobarsAttempts: 0,
+  foobarsAttemptsFailed: 0
 }
 
 const initialInventory: Garbage = {
@@ -23,6 +25,8 @@ const initialInventory: Garbage = {
 
 const initialState: Inventory = {
   ...initialInventory,
+  foobarsAttempts: 0,
+  foobarsAttemptsFailed: 0,
   garbage: initialInventory,
   robots: [
     {
@@ -43,6 +47,7 @@ const initialState: Inventory = {
 interface createManufacturedElementPayload {
   type: ManufacturedProduct
   createdBy: string
+  success?: boolean
 }
 
 const inventorySlice = createSlice({
@@ -57,8 +62,18 @@ const inventorySlice = createSlice({
       const robot = state.robots.find(({ uuid }) => uuid === createdBy)
       const at = relativeTime()
 
+      const isFoobar = type === 'foobars'
+
       if (robot) {
         robot.inventory[type] += 1
+
+        if (isFoobar) {
+          robot.inventory.foobarsAttempts += 1
+        }
+      }
+
+      if (isFoobar) {
+        state.foobarsAttempts += 1
       }
 
       state[type].push({
@@ -95,18 +110,25 @@ const inventorySlice = createSlice({
         inventory: initialRobotInventory,
         name: name || defaultName
       })
+    },
+    addFoobarAttemptFailed(state, action: PayloadAction<{ robot: string }>) {
+      const { robot: robotUuid } = action.payload
+      const robot = state.robots.find(({ uuid }) => uuid === robotUuid)
+
+      if (robot) {
+        robot.inventory.foobarsAttempts += 1
+        robot.inventory.foobarsAttemptsFailed += 1
+      }
+
+      state.foobarsAttemptsFailed += 1
     }
-  },
-  extraReducers: builder => {
-    builder.addCase(spendManufacturedElements, (state, action) => {
-      console.log(state, action)
-    })
   }
 })
 
 export const {
   createManufacturedElement,
   spendManufacturedElements,
-  createRobot
+  createRobot,
+  addFoobarAttemptFailed
 } = inventorySlice.actions
 export default inventorySlice.reducer

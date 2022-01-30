@@ -10,13 +10,25 @@ import {
 
 import {
   createManufacturedElement,
-  spendManufacturedElements
+  spendManufacturedElements,
+  addFoobarAttemptFailed
 } from '../Inventory/Inventory.reducer'
 
 import ActionButton from './ActionButton'
 import RobotInventory from './RobotInventory'
 
-import { Avatar, Card, CardContent, Chip, Typography } from '@mui/material'
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Chip,
+  // FormControl,
+  // InputLabel,
+  // MenuItem,
+  // Select,
+  // SelectChangeEvent,
+  Typography
+} from '@mui/material'
 
 interface RobotItemProps {
   uuid: string
@@ -24,12 +36,12 @@ interface RobotItemProps {
 }
 
 function RobotItem({ name, uuid }: RobotItemProps) {
+  const dispatch = useDispatch()
   const activity = useRef<Activity>('wait')
 
   const [location, setLocation] = useState<Location>('home')
   const [workStatus, setWorkStatus] = useState<WorkStatus | null>(null)
-
-  const dispatch = useDispatch()
+  // const [autoAction, setAutoAction] = useState<Activity | 'null'>('null')
 
   const work = async (type: Activity) => {
     setWorkStatus('inProgress')
@@ -60,13 +72,13 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         break
     }
 
-    setTimeout(() => setWorkStatus(null), 500)
+    // setTimeout(() => setWorkStatus(null), 500)
   }
 
   const keepBusy = async (activity: Activity) => {
     const duration = activitiesDurations[activity]
     const amount = typeof duration === 'function' ? duration() : duration
-    return new Promise(resolve => setTimeout(resolve, amount * 1000))
+    return new Promise(resolve => setTimeout(resolve, amount * 10))
   }
 
   const mineFoo = async () => {
@@ -85,11 +97,19 @@ function RobotItem({ name, uuid }: RobotItemProps) {
 
     if (success) {
       setWorkStatus('success')
-      dispatch(createManufacturedElement({ type: 'foobars', createdBy: uuid }))
+      dispatch(
+        createManufacturedElement({
+          type: 'foobars',
+          createdBy: uuid
+        })
+      )
+
       elementsToSpend.push({ type: 'bars', count: 1 })
+    } else {
+      setWorkStatus('error')
+      dispatch(addFoobarAttemptFailed({ robot: uuid }))
     }
 
-    setWorkStatus('error')
     dispatch(spendManufacturedElements(elementsToSpend))
   }
 
@@ -124,11 +144,24 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         return 'Minage de bar'
       case 'mineFoo':
         return 'Minage de foo'
+      case 'createFoobar':
+        return 'Assemblage de foobar'
       case 'wait':
       default:
         return 'Repos'
     }
   }
+
+  // const handleAutoActionChange = async (e: SelectChangeEvent) => {
+  //   const value = e.target.value
+  //   setAutoAction(value as Activity | 'null')
+
+  //   for (let i = 0; i < 1000; i++) {
+  //     if (value === 'null') break
+  //     await work(value as Activity)
+  //     console.log('ici')
+  //   }
+  // }
 
   // const showProgress = activity.current !== 'wait'
   // console.log(showProgress, activity.current)
@@ -180,6 +213,20 @@ function RobotItem({ name, uuid }: RobotItemProps) {
           >
             Assembler foobar
           </ActionButton>
+
+          {/* <FormControl className="auto-action" fullWidth>
+            <InputLabel id="auto-action">Action automatique</InputLabel>
+            <Select
+              labelId="auto-action"
+              onChange={handleAutoActionChange}
+              value={autoAction}
+            >
+              <MenuItem value="null">Aucune</MenuItem>
+              <MenuItem value="mineFoo">Miner des foo</MenuItem>
+              <MenuItem value="mineBar">Miner des bar</MenuItem>
+              <MenuItem value="createFoobar">Assembler des foobar</MenuItem>
+            </Select>
+          </FormControl> */}
           {/* {showProgress && <ActionProgress duration={progressDuration} />} */}
         </div>
         <div className="stats"></div>

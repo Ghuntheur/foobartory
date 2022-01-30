@@ -15,6 +15,8 @@ export interface RobotInventory {
   foos: number
   bars: number
   foobars: number
+  foobarsAttempts: number
+  foobarsAttemptsFailed: number
 }
 
 export interface Robot {
@@ -36,6 +38,8 @@ export interface Inventory {
   foobars: Foobar[]
   garbage: Garbage
   robots: Robot[]
+  foobarsAttempts: number
+  foobarsAttemptsFailed: number
 }
 
 export interface SpendItem {
