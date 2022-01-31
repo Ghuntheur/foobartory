@@ -1,16 +1,22 @@
 import { ReactNode } from 'react'
-import { Card, CardContent } from '@mui/material'
+import { Card, CardContent, Typography } from '@mui/material'
 
 import './stat-container.scss'
 
 interface StatContainerProps {
+  title: string
   children: ReactNode
 }
 
-function StatContainer({ children }: StatContainerProps) {
+function StatContainer({ title, children }: StatContainerProps) {
   return (
     <Card className="stat-container" variant="outlined">
-      <CardContent>{children}</CardContent>
+      <CardContent>
+        <Typography variant="h4" className="title">
+          {title}
+        </Typography>
+        <div>{children}</div>
+      </CardContent>
     </Card>
   )
 }

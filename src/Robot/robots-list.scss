@@ -1,6 +1,5 @@
 .robots-list-container {
-  width: 100%;
-  margin-top: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
 
   > .new-robot-container {
     display: flex;
