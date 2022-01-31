@@ -1,3 +1,5 @@
+@import '../styles/mixins';
+
 .sidebar-container {
   background: var(--color-dark);
   height: 100%;
@@ -7,11 +9,26 @@
     color: var(--color-light);
     text-align: center;
     margin-bottom: var(--spacing-xxl);
+
+    @include mobile {
+      margin-bottom: var(--spacing-s);
+    }
+  }
+
+  ul {
+    @include mobile {
+      display: flex;
+      justify-content: center;
+    }
   }
 
   li {
     color: var(--color-light);
     margin: var(--spacing-m) 0;
+
+    @include mobile {
+      margin: 0 var(--spacing-m);
+    }
 
     .active {
       text-decoration: underline;

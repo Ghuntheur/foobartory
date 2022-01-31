@@ -1,3 +1,5 @@
+@import '../styles/mixins';
+
 .dashboard-container {
   height: 100%;
 
@@ -6,6 +8,11 @@
     width: calc(100% - var(--main-width));
     height: 100vh;
     min-width: 200px;
+
+    @include mobile {
+      width: 100%;
+      height: auto;
+    }
   }
 
   > .main {
@@ -14,8 +21,17 @@
     padding: var(--spacing-xxl);
     height: 100%;
 
+    @include mobile {
+      width: 100%;
+      margin-left: 0;
+    }
+
     > .router {
       margin-top: 180px;
+
+      @include mobile {
+        margin-top: 260px;
+      }
     }
   }
 }

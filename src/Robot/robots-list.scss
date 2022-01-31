@@ -1,5 +1,8 @@
+@import '../styles/mixins';
+
 .robots-list-container {
   margin: var(--spacing-xl) 0;
+  padding-bottom: var(--spacing-xxl);
 
   > .new-robot-container {
     display: flex;

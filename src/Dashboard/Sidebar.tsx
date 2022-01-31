@@ -21,6 +21,11 @@ function Sidebar() {
             <Typography variant="button">Statistiques</Typography>
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/regles">
+            <Typography variant="button">Règles</Typography>
+          </NavLink>
+        </li>
       </ul>
     </div>
   )
