@@ -8,7 +8,6 @@ function RulesPage() {
       <Typography variant="body1">
         Les robots sont chacun capables d'effectuer plusieurs actions :
       </Typography>
-
       <Typography variant="body1">
         - Se déplacer pour changer d'activité : occupe le robot pendant 5
         secondes.
@@ -27,6 +26,9 @@ function RulesPage() {
       </Typography>
       <Typography variant="body1">
         - Acheter un nouveau robot pour 3 foobar et 6 Foobartory Front foo , 0s.
+      </Typography>
+      <Typography variant="body1">
+        La simulation se termine quand on a 20 robots.
       </Typography>
     </div>
   )
