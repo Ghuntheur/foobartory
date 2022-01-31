@@ -4,9 +4,9 @@ import { RootState } from '../App/app.store'
 
 import { useSelector } from '../commons/hooks'
 
-import './interface.scss'
+import './hud.scss'
 
-function Interface() {
+function Hud() {
   const getCount = (store: RootState, name: ManufacturedProduct | 'robots') => {
     const value = store.inventory[name]
     return Array.isArray(value) ? value.length : value
@@ -24,7 +24,7 @@ function Interface() {
   })
 
   return (
-    <div className="interface-container">
+    <div className="hud-container">
       <InventoryItem
         name="foos"
         count={useSelector(state => getCount(state, 'foos'))}
@@ -46,4 +46,4 @@ function Interface() {
   )
 }
 
-export default Interface
+export default Hud

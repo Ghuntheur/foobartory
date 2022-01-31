@@ -12,7 +12,7 @@ export const activityAccordingToLocation: LocationActivity = {
 }
 export const activitiesDurations: ActivityDuration = {
   wait: 0,
-  walking: 1,
+  walking: 5,
   mineFoo: 1,
   mineBar: () => randomBetween(0.5, 2),
   createFoobar: 2

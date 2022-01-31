@@ -1,6 +1,6 @@
-import { Typography, Chip } from '@mui/material'
 import { useSelector } from '../commons/hooks'
 import { IRobot } from '../commons/models'
+import InventoryItem from '../Inventory/InventoryItem'
 
 interface RobotInventoryProps {
   uuid: string
@@ -17,13 +17,6 @@ function RobotInventory({ uuid }: RobotInventoryProps) {
       state.inventory.robots.find((robot: IRobot) => robot.uuid === uuid)
     )?.inventory || {}
 
-  const Item = ({ name, count }: ItemProps) => (
-    <div>
-      <Typography variant="body2">{name}</Typography>
-      <Chip label={count} />
-    </div>
-  )
-
   const elements: ItemProps[] = Object.entries(inventory).reduce(
     (acc: ItemProps[], [name, count]: [string, any]) => {
       if (['foos', 'bars', 'foobars'].includes(name)) {
@@ -38,7 +31,7 @@ function RobotInventory({ uuid }: RobotInventoryProps) {
   return (
     <>
       {elements.map(item => (
-        <Item key={item.name} {...item} />
+        <InventoryItem isRobot={true} {...item} />
       ))}
     </>
   )

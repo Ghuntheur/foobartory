@@ -2,7 +2,7 @@ import { useSelector } from '../commons/hooks'
 import { IRobot } from '../commons/models'
 
 import RobotItem from './RobotItem'
-import End from '../Interface/End'
+import End from '../Hud/End'
 import NewRobotItem from '../Robot/NewRobotItem'
 
 import './robots-list.scss'
@@ -10,7 +10,7 @@ import './robots-list.scss'
 function RobotsList() {
   const robots = useSelector(state => state.inventory.robots)
 
-  const isEnd = robots.length === 4
+  const isEnd = robots.length === 20
 
   return isEnd ? (
     <End />

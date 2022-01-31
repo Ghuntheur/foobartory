@@ -2,4 +2,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  &.robot {
+    flex-direction: row;
+    margin: var(--spacing-s) 0;
+
+    .chip {
+      margin-left: var(--spacing-s);
+    }
+  }
 }

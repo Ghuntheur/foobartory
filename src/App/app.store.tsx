@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import chrono from '../Interface/Chrono.reducer'
+import chrono from '../Hud/Chrono.reducer'
 import inventory from '../Inventory/Inventory.reducer'
 
 export const store = configureStore({

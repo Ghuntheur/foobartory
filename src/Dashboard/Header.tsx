@@ -1,5 +1,5 @@
-import Interface from '../Interface/Interface'
-import Chrono from '../Interface/Chrono'
+import Hud from '../Hud/Hud'
+import Chrono from '../Hud/Chrono'
 
 import './header.scss'
 
@@ -7,7 +7,7 @@ function Header() {
   return (
     <div className="header-container">
       <Chrono />
-      <Interface />
+      <Hud />
     </div>
   )
 }

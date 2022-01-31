@@ -1,4 +1,4 @@
-import { startAt } from '../../Interface/Chrono.reducer'
+import { startAt } from '../../Hud/Chrono.reducer'
 
 export const insertIf = <T>(predicat: boolean, ...data: T[]): T[] =>
   predicat ? data : []

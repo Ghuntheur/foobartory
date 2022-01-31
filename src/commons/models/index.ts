@@ -24,6 +24,7 @@ export interface IRobot {
   name: string
   createdAt: number
   inventory: IRobotInventory
+  lastLocation?: Location
 }
 
 export interface IGarbage {

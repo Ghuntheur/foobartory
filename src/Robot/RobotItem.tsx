@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useSelector, useDispatch } from '../commons/hooks'
 import { Activity, Location, ISpendItem, WorkStatus } from '../commons/models'
 
@@ -15,7 +15,6 @@ import {
 } from '../Inventory/Inventory.reducer'
 
 import ActionButton from './ActionButton'
-import ActionProgress from './ActionProgress'
 import RobotInventory from './RobotInventory'
 
 import {
@@ -24,15 +23,11 @@ import {
   Card,
   CardContent,
   Chip,
-  // FormControl,
-  // InputLabel,
-  // MenuItem,
-  // Select,
-  // SelectChangeEvent,
   Typography
 } from '@mui/material'
 
 import './robot-item.scss'
+import ActivityIcon from './ActivityIcon'
 
 interface RobotItemProps {
   uuid: string
@@ -41,30 +36,27 @@ interface RobotItemProps {
 
 function RobotItem({ name, uuid }: RobotItemProps) {
   const dispatch = useDispatch()
-  const activity = useRef<Activity>('wait')
 
+  const [activity, setActivity] = useState<Activity>('wait')
   const [location, setLocation] = useState<Location>('home')
   const [workStatus, setWorkStatus] = useState<WorkStatus | null>(null)
-  // const [autoAction, setAutoAction] = useState<Activity | 'null'>('null')
 
   const work = async (type: Activity) => {
-    setWorkStatus('inProgress')
     const newLocation = activityAccordingToLocation[type]
+    setWorkStatus('inProgress')
 
     if (location !== newLocation) {
-      activity.current = 'walking'
       await keepBusy('walking')
       setLocation(newLocation)
     }
 
-    activity.current = type
-    await keepBusy(activity.current)
-    await processActivity()
-    activity.current = 'wait'
+    await keepBusy(type)
+    await processActivity(type)
+    setActivity('wait')
   }
 
-  const processActivity = async () => {
-    switch (activity.current) {
+  const processActivity = async (type: Activity) => {
+    switch (type) {
       case 'mineFoo':
         await mineFoo()
         break
@@ -78,6 +70,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   }
 
   const keepBusy = async (activity: Activity) => {
+    setActivity(activity)
     const duration = activitiesDurations[activity]
     const amount = typeof duration === 'function' ? duration() : duration
     return new Promise(resolve => setTimeout(resolve, amount * 1000))
@@ -97,6 +90,8 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     const success = Math.random() <= 0.6
     const elementsToSpend: ISpendItem[] = [{ type: 'foos', count: 1 }]
 
+    dispatch(spendManufacturedElements(elementsToSpend))
+
     if (success) {
       setWorkStatus('success')
       dispatch(
@@ -106,13 +101,11 @@ function RobotItem({ name, uuid }: RobotItemProps) {
         })
       )
 
-      elementsToSpend.push({ type: 'bars', count: 1 })
+      dispatch(spendManufacturedElements([{ type: 'bars', count: 1 }]))
     } else {
       setWorkStatus('error')
       dispatch(addFoobarAttemptFailed({ robot: uuid }))
     }
-
-    dispatch(spendManufacturedElements(elementsToSpend))
   }
 
   const enoughtElementsToCreateFoobar = useSelector(state => {
@@ -123,13 +116,13 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   })
 
   const formatLocation = (): string => {
-    if (activity.current === 'walking') return '...'
+    if (activity === 'walking') return '...'
 
     switch (location) {
       case 'barFactory':
-        return 'Usine de bars'
+        return 'Mine de bars'
       case 'fooFactory':
-        return 'Usine de foos'
+        return 'Mine de foos'
       case 'foobarFactory':
         return "Usine d'assemblage"
       case 'home':
@@ -139,7 +132,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
   }
 
   const formatActivity = (): string => {
-    switch (activity.current) {
+    switch (activity) {
       case 'walking':
         return 'En déplacement'
       case 'mineBar':
@@ -154,26 +147,7 @@ function RobotItem({ name, uuid }: RobotItemProps) {
     }
   }
 
-  // const handleAutoActionChange = async (e: SelectChangeEvent) => {
-  //   const value = e.target.value
-  //   setAutoAction(value as Activity | 'null')
-
-  //   for (let i = 0; i < 1000; i++) {
-  //     if (value === 'null') break
-  //     await work(value as Activity)
-  //     console.log('ici')
-  //   }
-  // }
-
-  const showProgress = activity.current === 'walking' && !!workStatus
-
-  console.log(showProgress, activity.current, workStatus)
-
-  const tempDuration = activitiesDurations[activity.current]
-  const progressDuration =
-    typeof tempDuration === 'function' ? tempDuration() : tempDuration
-
-  const isWorking = workStatus === 'inProgress'
+  const isWorking = workStatus === 'inProgress' || activity === 'walking'
 
   return (
     <Card
@@ -189,18 +163,15 @@ function RobotItem({ name, uuid }: RobotItemProps) {
             sx={{ width: '64px', height: '64px' }}
           />
         </div>
-        <div className="inventory">{/* <RobotInventory uuid={uuid} /> */}</div>
         <div className="activity">
-          <Typography variant="subtitle2">
-            Localisation :
-            <Chip label={formatLocation()} size="small" />
+          <Typography variant="subtitle2" className="activity-item">
+            Localisation :<Chip label={formatLocation()} size="small" />
           </Typography>
 
-          {showProgress && <ActionProgress duration={progressDuration} />}
+          <ActivityIcon activity={activity} />
 
-          <Typography variant="subtitle2">
-            Activité :
-            <Chip label={formatActivity()} size="small" />
+          <Typography variant="subtitle2" className="activity-item">
+            Activité :<Chip label={formatActivity()} size="small" />
           </Typography>
         </div>
         <div className="actions">
@@ -218,22 +189,10 @@ function RobotItem({ name, uuid }: RobotItemProps) {
               Assembler foobar
             </ActionButton>
           </ButtonGroup>
-
-          {/* <FormControl className="auto-action" fullWidth>
-            <InputLabel id="auto-action">Action automatique</InputLabel>
-            <Select
-              labelId="auto-action"
-              onChange={handleAutoActionChange}
-              value={autoAction}
-            >
-              <MenuItem value="null">Aucune</MenuItem>
-              <MenuItem value="mineFoo">Miner des foo</MenuItem>
-              <MenuItem value="mineBar">Miner des bar</MenuItem>
-              <MenuItem value="createFoobar">Assembler des foobar</MenuItem>
-            </Select>
-          </FormControl> */}
         </div>
-        <div className="stats"></div>
+        <div className="inventory">
+          <RobotInventory uuid={uuid} />
+        </div>
       </CardContent>
     </Card>
   )

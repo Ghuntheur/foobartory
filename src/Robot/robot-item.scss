@@ -4,10 +4,19 @@
     align-items: center;
 
     > .identity {
-      margin-right: var(--spacing-m);
+      margin-right: var(--spacing-xl);
     }
 
     > .activity {
+      margin-right: var(--spacing-xl);
+
+      .activity-item {
+        margin: var(--spacing-s) 0;
+      }
+    }
+
+    > .inventory {
+      margin-left: var(--spacing-m);
     }
   }
 }

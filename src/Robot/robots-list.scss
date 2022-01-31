@@ -10,7 +10,7 @@
 
   > .list {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(460px, 100%), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(500px, 100%), 1fr));
     gap: var(--spacing-m);
   }
 }
