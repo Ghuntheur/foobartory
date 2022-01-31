@@ -10,6 +10,8 @@ npm run dev
 npm run build
 ```
 
+[Demo live](https://flo-foobartory.netlify.app/)
+
 ## Technos
 
 - React (utilisation des hooks)
